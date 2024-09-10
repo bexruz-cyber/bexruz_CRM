@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Manrope";
+  overflow-x: hidden;
+}
+
+
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  /* Safari */
+  -moz-appearance: none;
+  /* Firefox */
+  appearance: none;
+  width: 16px;
+  /* 20px */
+  height: 16px;
+  /* 20px */
+  border: 1px solid #E4E4E4;
+  border-radius: 0.25rem;
+  /* 4px */
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+input[type="checkbox"]:checked::before {
+  content: '✓';
+  /* Checkmark belgisini qo'shadi */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #FFFFFF;
+  /* Checkmark rangini sozlash */
+  font-size: 1rem;
+  /* Checkmark hajmi */
+}
+
+/* TotalRevenue.css */
+/* styles/globals.css */
+@layer components {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    /* Width of the scrollbar */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #FCFCFC;
+    /* Background color of the track */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #475BE8;
+    /* Color of the scrollbar thumb */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #475ae8d3;
+    /* Color of the scrollbar thumb on hover */
+  }
+}
+
+.top_agent {
+  max-width: 366px;
+}
+
+.sales_laptop {
+  display: none;
+}
+
+.modal {
+  box-shadow: 0px 40px 50px 1px #78727226;
+}
+
+.t_c_s_container {
+  margin-bottom: 25px;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+  position: static;
+}
+
+.swiper-slide {
+  width: 100%;
+}
+
+
+.swiper-pagination {
+  max-width: 215px !important;
+  position: static; 
+  display: flex !important;
+  justify-content: end !important;
+  gap: 0 !important;
+  align-items: center;
+}
+
+.swiper-pagination-bullet {
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+  line-height: 22px;
+  font-size: 14px;
+  color: #6F767E;
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 7px 15px;
+}
+
+.swiper-pagination-bullet-active {
+  color: #EFEFEF;
+  background: #475BE8;
+}
+.swiper-button-next{
+  position: static !important;
+  bottom: 0 !important;
+}
+.box{
+  overflow-x: scroll;
+  min-width: 793px !important;
+  margin-left: auto;
+}
+
+
+@media(max-width:1371px) {
+  .sales {
+    display: none;
+  }
+
+  .top_agent {
+    max-width: none;
+    width: 100%;
+  }
+
+  .sales_laptop {
+    display: block;
+  }
+
+  .t_c_s_container {
+    margin-bottom: 20px;
+  }
+}
+
+.chatMassageWriterPerent{
+  position: relative !important;
+}
