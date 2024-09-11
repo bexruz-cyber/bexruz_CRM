@@ -15,6 +15,13 @@ interface imgState {
   url: string;
 }
 
+interface Message {
+  senderId: string;
+  text: string;
+  createdAt: Date;
+  img?: string;
+}
+
 export default function Chat({ isDarkMode }: MessageProps) {
   const [chat, setChat] = useState<DocumentData | undefined>();
   const [open, setOpen] = useState(false);
@@ -130,11 +137,6 @@ export default function Chat({ isDarkMode }: MessageProps) {
     fetchChatUser();
   }, [user.id]);
   
-
-
-
-
-
   return (
     <div className={`flex-[2] transition-all duration-300 flex flex-col pb-[15px] border-r border-l ${isDarkMode ? "border-[#272B30]" : "border-[#E4E4E4]"}`}>
       <div className={`chatHeader border-b flex justify-between items-center w-full p-5 ${isDarkMode ? "border-[#272B30]" : "border-[#E4E4E4]"}`}>
@@ -167,8 +169,9 @@ export default function Chat({ isDarkMode }: MessageProps) {
         </div>
       </div>
       <div className="flex-1 flex flex-col gap-[15px] transition-all duration-300 p-5 bg-blend-overlay hover:overflow-y-auto overflow-hidden">
-        {chat?.messages?.map(message => (
-          <div className={`mb-2.5 flex flex-col ${message.senderId === currentUser.id ? 'self-end' : 'self-start'}`} key={message?.createdAt}>
+        {chat?.messages?.map((message: Message) => (
+          <div className={`mb-2.5 flex flex-col ${message.senderId === currentUser.id ? 'self-end' : 'self-start'}`} key={message.createdAt.getTime()}
+          >
             {message.img && (
               <div className='mb-[5px] w-full'>
                 <img src={message.img} alt="img" className='w-full h-[300px] rounded-[10px] object-cover' />

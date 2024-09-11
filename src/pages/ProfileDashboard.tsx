@@ -27,7 +27,8 @@ const ProfileDashboard = ({ isDarkMode }: DashboardProps) => {
     };
 
     // Filter PropertyList based on selected filter
-    const filteredProperties = Propertydata.PropertyList[selectedFilter] || [];
+    const filteredProperties = Propertydata.PropertyList[selectedFilter as keyof typeof Propertydata.PropertyList] || [];
+
 
     return (
         <div className={`pt-7 pb-[30px] px-[25px]`}>

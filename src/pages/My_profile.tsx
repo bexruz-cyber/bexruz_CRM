@@ -18,7 +18,8 @@ export default function My_profile({ isDarkMode }: MyProfileProps) {
   const navigate = useNavigate()
 
   // Filter PropertyList based on selected filter
-  const filteredProperties = Propertydata.PropertyList[selectedFilter] || [];
+  const filteredProperties = Propertydata.PropertyList[selectedFilter as keyof typeof Propertydata.PropertyList] || [];
+
   return (
     <div className="pt-7 pb-8 px-[25px]">
       <h1 className={`${isDarkMode ? "text-[#EFEFEF]" : "text-[#11142D]"} mb-5 font-semibold md:font-bold text-lg md:text-2xl leading-6 md:leading-[34px]`}>
