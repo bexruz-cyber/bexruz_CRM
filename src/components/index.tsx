@@ -4,7 +4,6 @@ export { default as Header } from './Header';
 export { default as Dashboard } from '../pages/Dashboard'
 export { default as Property } from '../pages/Property'
 export { default as Agent } from '../pages/Agent'
-export { default as Message } from '../pages/Message'
 export { default as My_profile } from '../pages/My_profile'
 export { default as Navbar } from './Navbar'
 export { default as PieChart } from './Pie_chart'

@@ -1,8 +1,9 @@
 import { useRef } from 'react'; // Import useRef
-import { Swiper as SwiperClass, Swiper, SwiperSlide } from 'swiper/react'; // Import Swiper class for ref
+import { Swiper as Swiper, SwiperSlide } from 'swiper/react'; // Import Swiper
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
+import { SwiperRef } from 'swiper/react'; // Import SwiperRef for ref
 
 import { AgentCard } from "../components/";
 import { AgentData } from "../DB/AgentDB";
@@ -13,8 +14,8 @@ interface AgentProps {
 }
 
 export default function Agent({ isDarkMode }: AgentProps) {
-  // Use the SwiperClass type for the ref instead of any
-  const swiperRef = useRef<SwiperClass | null>(null);
+  // Use SwiperRef type for the ref instead of SwiperClass
+  const swiperRef = useRef<SwiperRef | null>(null);
 
   const pagination = {
     clickable: true,
@@ -44,24 +45,22 @@ export default function Agent({ isDarkMode }: AgentProps) {
       </div>
       <div className={`${AgentData.agentList.length > 4 ? "mb-[30px]" : "mb-0"}`}>
         <Swiper
-          ref={swiperRef}
+          ref={swiperRef} // Using SwiperRef for the ref
           pagination={pagination}
           modules={[Pagination]}
           className={`${isDarkMode ? "bg-[#1A1D1F]" : "bg-[#FCFCFC]"} rounded-[10px]`}
           spaceBetween={10}
           slidesPerView={1}
         >
-          {
-            agentChunks.map((chunk, index) => (
-              <SwiperSlide key={index}>
-                <div className="grid grid-cols-1 gap-4">
-                  {chunk.map(agent => (
-                    <AgentCard key={agent.Id} isDarkMode={isDarkMode} agent={agent} />
-                  ))}
-                </div>
-              </SwiperSlide>
-            ))
-          }
+          {agentChunks.map((chunk, index) => (
+            <SwiperSlide key={index}>
+              <div className="grid grid-cols-1 gap-4">
+                {chunk.map(agent => (
+                  <AgentCard key={agent.Id} isDarkMode={isDarkMode} agent={agent} />
+                ))}
+              </div>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
       <div className="flex items-center justify-between mt-4">
