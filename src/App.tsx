@@ -4,25 +4,25 @@ import { useEffect, useState } from "react";
 import { Propertydata } from "./DB/PropertyDB";
 
 export default function App() {
-  const location = useLocation(); // Pathname'ni kuzatib borish uchun
-  const navigate = useNavigate(); // Yönlendirme uchun
+  const location = useLocation(); // Hozirgi sahifani kuzatib borish uchun
+  const navigate = useNavigate(); // Sahifani yo'naltirish uchun
   const [isLoading, setIsLoading] = useState<boolean>(true); // Yuklanish holati
-  const [isLogin, setIsLogin] = useState<boolean>(false); // Kirish holati
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false); // Modal oynaning ochilishi
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
-  const [editProfile, setEditProfile] = useState<boolean>(false); //
-  const [modalsClose, setModalsClose] = useState(false)
+  const [isLogin, setIsLogin] = useState<boolean>(false); // Foydalanuvchi kirganligini tekshirish
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false); // Modal oynasini ochish yoki yopish
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true); // Tungi yoki kunduzgi rejim
+  const [editProfile, setEditProfile] = useState<boolean>(false); // Profilni tahrirlash rejimi
+  const [modalsClose, setModalsClose] = useState(false); // Modallarning yopilish holati
 
+  const propertydataFromLocalStorage = localStorage.getItem('Propertydata'); // LocalStorage'dan ma'lumot olish
 
-  const propertydataFromLocalStorage = localStorage.getItem('Propertydata');
-
-
+  // LocalStorage'da ma'lumot bo'lmasa, dastlabki ma'lumotlarni saqlash
   useEffect(() => {
     if (!propertydataFromLocalStorage === true) {
-      localStorage.setItem('Propertydata', JSON.stringify(Propertydata.PropertyListMain))
+      localStorage.setItem('Propertydata', JSON.stringify(Propertydata.PropertyListMain));
     }
-  }, [isLogin, propertydataFromLocalStorage])
+  }, [isLogin, propertydataFromLocalStorage]);
 
+  // Foydalanuvchini avtomatik tekshirish va login qilish
   useEffect(() => {
     try {
       const email = localStorage.getItem("email");
@@ -36,10 +36,10 @@ export default function App() {
       }
 
       if (email && password && name && lastname) {
-        setIsLogin(true);
+        setIsLogin(true); // Foydalanuvchi tizimga kirganligini ko'rsatadi
       } else {
         setIsLogin(false);
-        navigate("/login");
+        navigate("/login"); // Agar login qilmagan bo'lsa, login sahifasiga yo'naltirish
       }
     } catch (error) {
       console.error('Autentifikatsiya tekshirishda xatolik', error);
@@ -49,6 +49,7 @@ export default function App() {
     }
   }, [location.pathname, navigate]);
 
+  // Agar yuklanish jarayoni tugamagan bo'lsa, yuklanish animatsiyasini ko'rsatish
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -57,10 +58,9 @@ export default function App() {
     );
   }
 
-
   return (
-    <div className={`max-w-[1540px] relative mx-auto pt-[70px] md:pl-[250px] ${modalsClose ? "h-screen  overflow-y-hidden" : "overflow-auto"}  ${editProfile ? "h-screen  overflow-y-hidden" : "overflow-auto"}  `}>
-      <div className={`fixed left-0 top-0 h-full w-full z-[-1]  transition-all duration-300 ${isDarkMode ? "bg-[#111315]" : "bg-[#F4F4F4]"}`}></div>
+    <div className={`max-w-[1540px] relative mx-auto pt-[70px] md:pl-[250px] ${modalsClose ? "h-screen overflow-y-hidden" : "overflow-auto"} ${editProfile ? "h-screen overflow-y-hidden" : "overflow-auto"}`}>
+      <div className={`fixed left-0 top-0 h-full w-full z-[-1] transition-all duration-300 ${isDarkMode ? "bg-[#111315]" : "bg-[#F4F4F4]"}`}></div>
       {isLogin && !["/login", "/sign"].includes(location.pathname) && (
         <>
           <Header isLoading={isLoading} setIsLoading={setIsLoading} setModalIsOpen={setModalIsOpen} modalIsOpen={modalIsOpen} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} setEditProfile={setEditProfile} editProfile={editProfile} />
@@ -71,7 +71,7 @@ export default function App() {
         <Route path="/" element={<Dashboard isDarkMode={isDarkMode} />} />
         <Route path="/sign" element={<Sign isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />} />
         <Route path="/login" element={<Login isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />} />
-        <Route path="/property" element={<Property isDarkMode={isDarkMode} modalsClose={modalsClose}  setModalsClose={setModalsClose} />} />
+        <Route path="/property" element={<Property isDarkMode={isDarkMode} modalsClose={modalsClose} setModalsClose={setModalsClose} />} />
         <Route path="/propertyDetail/:id" element={<PropertyDetail isDarkMode={isDarkMode} />} />
         <Route path="/agent" element={<Agent isDarkMode={isDarkMode} />} />
         <Route path="/my_profile" element={<My_profile isDarkMode={isDarkMode} />} />
