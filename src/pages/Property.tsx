@@ -49,10 +49,10 @@ export default function Property({ isDarkMode, modalsClose, setModalsClose }: Pr
   const [addPropertyFaciltyParkingArea, setAddPropertyFaciltyParkingArea] = useState<boolean>(false);
   const [addPropertyDescription, setAddPropertyDescription] = useState<string>("");
   const [addPropertySellerNameLastname, setAddPropertySellerNameLastname] = useState<string>("");
-  const [addPropertySellerAgent, setAddPropertySellerAgent] = useState<string>("Agent");
+  const [addPropertySellerAgent] = useState<string>("Agent");
   const [addPropertySellerSellerLocation, setAddPropertySellerSellerLocation] = useState<string>("");
   const [addPropertySellerProperties, setAddPropertySellerProperties] = useState<number | undefined>(undefined); // Corrected typo
-  const [addPropertySellerMap, setAddPropertySellerMap] = useState<string>(`<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3340894.342773026!2d-82.50161121222705!3d35.14185058324535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88541fc4fc381a81%3A0xad3f30f5e922ae19!2sNorth%20Carolina%2C%20USA!5e0!3m2!1sen!2s!4v1724390059961!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`);
+  const [addPropertySellerMap] = useState<string>(`<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3340894.342773026!2d-82.50161121222705!3d35.14185058324535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88541fc4fc381a81%3A0xad3f30f5e922ae19!2sNorth%20Carolina%2C%20USA!5e0!3m2!1sen!2s!4v1724390059961!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`);
   const [fromErrorModal, setfromErrorModal] = useState(false)
   const propertydataFromLocalStorage: PropertyListMain[] = JSON.parse(localStorage.getItem('Propertydata') ?? '[]');
 
@@ -180,11 +180,6 @@ export default function Property({ isDarkMode, modalsClose, setModalsClose }: Pr
 
     return matchesStatus && matchesType && matchesCountries && matchesSearch;
   }) ?? [];
-
-
-
-
-
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, inputName: string) => {
     const file = event.target.files?.[0];

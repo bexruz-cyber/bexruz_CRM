@@ -1,5 +1,5 @@
 import { useRef } from 'react'; // Import useRef
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperClass, Swiper, SwiperSlide } from 'swiper/react'; // Import Swiper class for ref
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
@@ -12,10 +12,9 @@ interface AgentProps {
   isDarkMode: boolean;
 }
 
-
-
 export default function Agent({ isDarkMode }: AgentProps) {
-  const swiperRef = useRef<any>(null);
+  // Use the SwiperClass type for the ref instead of any
+  const swiperRef = useRef<SwiperClass | null>(null);
 
   const pagination = {
     clickable: true,
@@ -55,7 +54,7 @@ export default function Agent({ isDarkMode }: AgentProps) {
           {
             agentChunks.map((chunk, index) => (
               <SwiperSlide key={index}>
-                <div  className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {chunk.map(agent => (
                     <AgentCard key={agent.Id} isDarkMode={isDarkMode} agent={agent} />
                   ))}
