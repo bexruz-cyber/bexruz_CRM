@@ -2,7 +2,6 @@ import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Header, Login, Sign, Dashboard, Property, Agent, Message, My_profile, Navbar, ProfileDashboard, PropertyDetail, AgentDetail, MessageChatDetail } from "./components";
 import { useEffect, useState } from "react";
 import { Propertydata } from "./DB/PropertyDB";
-import { MessageData } from "./DB/MessageDB";
 
 export default function App() {
   const location = useLocation(); // Pathname'ni kuzatib borish uchun
@@ -23,14 +22,6 @@ export default function App() {
       localStorage.setItem('Propertydata', JSON.stringify(Propertydata.PropertyListMain))
     }
   }, [isLogin, propertydataFromLocalStorage])
-
-  // const MessagelocalStorageData = localStorage.getItem('Messages');
-  // useEffect(() => {
-  //   if (!MessagelocalStorageData === true) {
-  //     localStorage.setItem('Messages', JSON.stringify(MessageData))
-  //   }
-  // }, [isLogin, MessagelocalStorageData])
-
 
   useEffect(() => {
     try {

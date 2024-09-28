@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import right_img from "../img/sign_right.png";
 
 interface signProps {

@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, setDoc, serverTimestamp, doc, updateDoc, arrayUnion, runTransaction } from "firebase/firestore";
+import { collection, getDocs, query, where, setDoc, serverTimestamp, doc, arrayUnion, runTransaction } from "firebase/firestore";
 import { db } from "../../../../lib/firebase";
 import { useState } from "react";
 import { useUserStore } from "../../../../lib/userStore";
@@ -13,6 +13,13 @@ interface User {
     avatarUrl?: string;
 }
 
+interface Chat {
+    chatId: string;
+    lastMessage: string;
+    receiverId: string;
+    updateAt: number;
+}
+
 export default function AddUser({ isDarkMode }: ChatListProps) {
     const [user, setUser] = useState<User | null>(null);
     const [username, setUsername] = useState("");
@@ -22,7 +29,6 @@ export default function AddUser({ isDarkMode }: ChatListProps) {
         e.preventDefault();
 
         try {
-            // Loading holatini yangilash
             const userRef = collection(db, "users");
             const q = query(userRef, where("username", "==", username));
             const querySnapshot = await getDocs(q);
@@ -36,8 +42,6 @@ export default function AddUser({ isDarkMode }: ChatListProps) {
             }
         } catch (error) {
             console.error("Error fetching user:", error);
-        } finally {
-            // Loading holatini yangilash
         }
     };
 
@@ -48,14 +52,14 @@ export default function AddUser({ isDarkMode }: ChatListProps) {
         const userChatsRef = collection(db, "userchats");
 
         try {
-            // Yangi chat yaratish
+            // Create a new chat document
             const newChatRef = doc(chatRef);
             await setDoc(newChatRef, {
                 createdAt: serverTimestamp(),
                 messages: []
             });
 
-            // Transaction orqali yangilas           h
+            // Update user chats using a transaction
             await runTransaction(db, async (transaction) => {
                 const userChatDocRef = doc(userChatsRef, user.id);
                 const currentUserChatDocRef = doc(userChatsRef, currentUser.id);
@@ -68,8 +72,8 @@ export default function AddUser({ isDarkMode }: ChatListProps) {
                         chatId: newChatRef.id,
                         lastMessage: "",
                         receiverId: user.id,
-                        updateAt: Date.now()
-                    })
+                        updateAt: Date.now(),
+                    } as Chat), // Use Chat type
                 };
 
                 const currentUserChatUpdate = {
@@ -77,15 +81,15 @@ export default function AddUser({ isDarkMode }: ChatListProps) {
                         chatId: newChatRef.id,
                         lastMessage: "",
                         receiverId: user.id,
-                        updateAt: Date.now()
-                    })
+                        updateAt: Date.now(),
+                    } as Chat), // Use Chat type
                 };
 
-                if (!userChatDoc.exists() || !userChatDoc.data().chats.some((chat: any) => chat.chatId === newChatRef.id)) {
+                if (!userChatDoc.exists() || !userChatDoc.data()?.chats.some((chat: Chat) => chat.chatId === newChatRef.id)) {
                     transaction.update(userChatDocRef, userChatUpdate);
                 }
 
-                if (!currentUserChatDoc.exists() || !currentUserChatDoc.data().chats.some((chat: any) => chat.chatId === newChatRef.id)) {
+                if (!currentUserChatDoc.exists() || !currentUserChatDoc.data()?.chats.some((chat: Chat) => chat.chatId === newChatRef.id)) {
                     transaction.update(currentUserChatDocRef, currentUserChatUpdate);
                 }
             });

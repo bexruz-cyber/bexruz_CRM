@@ -7,141 +7,121 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-
 interface MessageChatDetailProps {
-    isDarkMode: boolean;
+  isDarkMode: boolean;
 }
 
-// Interface for a message object
 interface Message {
-    text: string;
-    img: Record<string, string>; // Key-value pairs where key is a string and value is the image URL
-  }
-  
-  // Interface for a single message entry
-  interface MessageEntry {
-    role: string;
-    profileImg?: string; // Optional if the role is "you"
-    message: Message;
-    time: string;
-    Id: string;
-  }
-  
-  // Interface for the main data structure
-  interface Chat {
-    Id: string;
-    profileImg: string;
-    name: string;
-    lastName: string;
-    lastNews: string;
-    recentActivity: string;
-    messages: MessageEntry[];
-  }
-  
+  text: string;
+  img: Record<string, string>;
+}
 
+interface MessageEntry {
+  role: string;
+  profileImg?: string;
+  message: Message;
+  time: string;
+  Id: string;
+}
 
-
+interface Chat {
+  Id: string;
+  profileImg: string;
+  name: string;
+  lastName: string;
+  lastNews: string;
+  recentActivity: string;
+  messages: MessageEntry[];
+}
 
 export default function MessageChatDetail({ isDarkMode }: MessageChatDetailProps) {
-    const { id } = useParams<{ id: string }>();
-    const MessagelocalStorageData: Chat[] = JSON.parse(localStorage.getItem('Messages') ?? '[]');
-    const [messageText, setMessageText] = useState<string>("")
-    const [messageImg, setMessageImg] = useState<string>("")
-    const [messageTime, setMessageTime] = useState<string>("")
-    const [messageError, setMessageError] = useState(false)
+  const { id } = useParams<{ id: string }>();
+  const MessagelocalStorageData: Chat[] = JSON.parse(localStorage.getItem('Messages') ?? '[]');
+  const [messageText, setMessageText] = useState<string>("");
+  const [messageImg, setMessageImg] = useState<string>("");
+  const [messageError, setMessageError] = useState(false);
 
-    const chat = MessagelocalStorageData && MessagelocalStorageData.find((property) => property.Id === id);
-    
-    // Redirect to "/message" if the property is not found
-    if (!chat) {
-        // window.location.pathname = "/message";
-        return null; // Prevents rendering the rest of the component
+  const chat = MessagelocalStorageData && MessagelocalStorageData.find((property) => property.Id === id);
+
+  if (!chat) {
+    return null; // Redirect to "/message" if the property is not found
+  }
+
+  const addpropertyhandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!messageText) {
+      setMessageError(true);
+      return;
     }
-    
 
-
-    console.log(chat);
-
-    const addpropertyhandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (!messageText) {
-            setMessageError(true)
-            return;
-        }
-
-
-        const newProperty = {
-            role: "you",
-            profileImg: chat.profileImg,
-
-            message: {
-                text: messageText,
-                img: { messageImg },
-            },
-            time: messageTime,
-            Id: uuidv4(),
-        }
-
-        // Reset the state values
-        const newArr = chat.messages.unshift(newProperty)
-        localStorage.setItem('Messages', JSON.stringify(newArr));
-    }
-    const handleFileChange = (
-        event: React.ChangeEvent<HTMLInputElement>,
-        setImageState: React.Dispatch<React.SetStateAction<string>>
-    ) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (reader.result) {
-                    const img = new Image();
-                    img.src = reader.result as string;
-
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-
-                        if (ctx) {
-                            // Resize the image
-                            const maxWidth = 800; // Set your desired max width
-                            const maxHeight = 600; // Set your desired max height
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                                if (width > maxWidth) {
-                                    height *= maxWidth / width;
-                                    width = maxWidth;
-                                }
-                            } else {
-                                if (height > maxHeight) {
-                                    width *= maxHeight / height;
-                                    height = maxHeight;
-                                }
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-
-                            // Draw the image on the canvas
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            // Convert the canvas to a base64 string with reduced quality
-                            const quality = 0.7; // Set quality between 0 and 1
-                            const compressedImage = canvas.toDataURL('image/jpeg', quality);
-
-                            setImageState(compressedImage); // Update the state with compressed image
-                        }
-                    };
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+    const newProperty = {
+      role: "you",
+      profileImg: chat.profileImg,
+      message: {
+        text: messageText,
+        img: { messageImg },
+      },
+      time: new Date().toLocaleTimeString(), // Use the current time instead of state
+      Id: uuidv4(),
     };
 
+    chat.messages.unshift(newProperty); // Add the new message to the chat
+    localStorage.setItem('Messages', JSON.stringify(MessagelocalStorageData)); // Save updated data to localStorage
 
+    setMessageText(""); // Reset message input after sending
+    setMessageImg("");  // Clear image state
+    setMessageError(false); // Reset error
+  };
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setImageState: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          const img = new Image();
+          img.src = reader.result as string;
+
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            if (ctx) {
+              const maxWidth = 800;
+              const maxHeight = 600;
+              let width = img.width;
+              let height = img.height;
+
+              if (width > height) {
+                if (width > maxWidth) {
+                  height *= maxWidth / width;
+                  width = maxWidth;
+                }
+              } else {
+                if (height > maxHeight) {
+                  width *= maxHeight / height;
+                  height = maxHeight;
+                }
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+              ctx.drawImage(img, 0, 0, width, height);
+
+              const quality = 0.7;
+              const compressedImage = canvas.toDataURL('image/jpeg', quality);
+              setImageState(compressedImage);
+            }
+          };
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
     return (
         <>

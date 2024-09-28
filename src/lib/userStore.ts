@@ -1,19 +1,28 @@
-import { doc, getDoc } from "firebase/firestore";
 import { create } from "zustand";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
-// State interfeysini aniqlaymiz
-interface UserState {
-  currentUser: any | null; // Agar `currentUser` ma'lumot turi noma'lum bo'lsa, `any` sifatida belgilash mumkin
-  isLoading: boolean;
-  fetchUserInfo: (uid: string | null) => Promise<void>; // Asinxron funksiya uchun `Promise<void>` tipi
+// Define the User interface
+interface User {
+  id: string; // Unique identifier for the user
+  username: string; // Username of the user
+  avatarUrl?: string; // Optional avatar URL
+  blocked: string[]; // Array of user IDs that this user has blocked
 }
 
+// Define the user state interface
+interface UserState {
+  currentUser: User | null; // Current logged-in user
+  isLoading: boolean; // Loading state
+  fetchUserInfo: (uid: string | null) => Promise<void>; // Asynchronous function to fetch user info
+}
+
+// Create the user store
 export const useUserStore = create<UserState>((set) => ({
   currentUser: null,
   isLoading: true,
   fetchUserInfo: async (uid: string | null) => {
-    set({ isLoading: true }); // Ma'lumot yuklanmoqda flagini o'zgartirish
+    set({ isLoading: true }); // Set loading state to true
 
     if (!uid) {
       set({ currentUser: null, isLoading: false });
@@ -25,7 +34,7 @@ export const useUserStore = create<UserState>((set) => ({
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        set({ currentUser: docSnap.data(), isLoading: false });
+        set({ currentUser: docSnap.data() as User, isLoading: false }); // Set currentUser with fetched data
       } else {
         set({ currentUser: null, isLoading: false });
       }
