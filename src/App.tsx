@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { Header, Login, Sign, Dashboard, Property, Agent, Message, My_profile, Navbar, ProfileDashboard, PropertyDetail, AgentDetail, MessageChatDetail } from "./components";
+import { Header, Login, Sign, Dashboard, Property, Agent, My_profile, Navbar, ProfileDashboard, PropertyDetail, AgentDetail } from "./components";
 import { useEffect, useState } from "react";
 import { Propertydata } from "./DB/PropertyDB";
 
@@ -74,11 +74,9 @@ export default function App() {
         <Route path="/property" element={<Property isDarkMode={isDarkMode} modalsClose={modalsClose}  setModalsClose={setModalsClose} />} />
         <Route path="/propertyDetail/:id" element={<PropertyDetail isDarkMode={isDarkMode} />} />
         <Route path="/agent" element={<Agent isDarkMode={isDarkMode} />} />
-        <Route path="/message" element={<Message isDarkMode={isDarkMode} />} />
         <Route path="/my_profile" element={<My_profile isDarkMode={isDarkMode} />} />
         <Route path="/profileDashboard" element={<ProfileDashboard isDarkMode={isDarkMode} />} />
         <Route path="/agentDetail/:id" element={<AgentDetail isDarkMode={isDarkMode} />} />
-        <Route path="/messageChatDetail/:id" element={<MessageChatDetail isDarkMode={isDarkMode} />} />
       </Routes>
     </div>
   );
